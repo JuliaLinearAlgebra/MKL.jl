@@ -1,0 +1,15 @@
+language: julia
+
+os:
+  - linux
+
+julia:
+  - 1.0
+
+before_script:
+  # Every 30 seconds, look for the build log file. If it exists, then
+  # start watching its contents and printing them to stdout as they
+  # change. This has two effects:
+  #   1. it avoids Travis timing out because the build outputs nothing
+  #   2. it makes it more obvious what part of the build, if any, gets stuck
+  - while sleep 30; do tail ~/build/JuliaPackaging/CMake.jl/deps/build.log -f ; done &
