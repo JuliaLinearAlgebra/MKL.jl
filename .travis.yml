@@ -12,4 +12,4 @@ before_script:
   # change. This has two effects:
   #   1. it avoids Travis timing out because the build outputs nothing
   #   2. it makes it more obvious what part of the build, if any, gets stuck
-  - while sleep 30; do tail ~/build/JuliaPackaging/CMake.jl/deps/build.log -f ; done &
+  - while sleep 30; do tail ./deps/build.log -f ; done &
