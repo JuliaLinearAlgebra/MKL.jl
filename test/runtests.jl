@@ -1,4 +1,4 @@
 using Test
 using LinearAlgebra
 
-@test BLAS.vendor == :mkl
+@test BLAS.vendor() == :mkl
