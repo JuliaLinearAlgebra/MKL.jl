@@ -5,6 +5,7 @@ const verbose = "--verbose" in ARGS
 const prefix = Prefix(get([a for a in ARGS if a != "--verbose"], 1, joinpath(@__DIR__, "usr")))
 products = [
     LibraryProduct(prefix, ["libmkl_core", "mkl_core"], :libmkl_core),
+    LibraryProduct(prefix, ["libmkl_intel_thread", "mkl_intel_thread"], :libmkl_intel_thread),
     LibraryProduct(prefix, ["libmkl_rt", "mkl_rt"], :libmkl_rt),
 ]
 

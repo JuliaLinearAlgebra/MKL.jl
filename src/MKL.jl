@@ -37,6 +37,12 @@ module MKL
     end
 
     function __init__()
+
+        if Sys.iswindows()
+            # On Windows, we have to open the threading library before calling libmkl_rt
+            dlopen(libmkl_intel_thread)
+        end
+
         set_threading_layer()
         set_interface_layer()
     end
