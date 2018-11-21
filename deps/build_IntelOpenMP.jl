@@ -15,7 +15,7 @@ download_info = Dict(
     Linux(:x86_64)   => ("$bin_prefix/IntelOpenMP.v2018.0.3.x86_64-linux-gnu.tar.gz", "a4e4a76bb284045a1236c9da1be3c6890fd9189c62946e152e9205c851e26dd2"),
     Linux(:i686)     => ("$bin_prefix/IntelOpenMP.v2018.0.3.i686-linux-gnu.tar.gz", "cdb0ecefa8b4a761b9ce875af5134c9b1abe77f26e45033eeaac1ea617c8326f"),
     Windows(:x86_64) => ("$bin_prefix/IntelOpenMP.v2018.0.3.x86_64-w64-mingw32.tar.gz", "6e03e24893a69ffc6a4e6a9be55dde3c9f9c162cacf17aeb93a3a53633e4d6b8"),
-    Windows(:i686)   => ("$bin_prefix/IntelOpenMP.v2018.0.3.i686-w64-mingw32.tar", "4db08bc8524e5bd50d191e437feedf1f8d0ff03265018b7f17c120ac2bc1aff0"),
+    Windows(:i686)   => ("$bin_prefix/IntelOpenMP.v2018.0.3.i686-w64-mingw32.tar.gz", "4db08bc8524e5bd50d191e437feedf1f8d0ff03265018b7f17c120ac2bc1aff0"),
     MacOS(:x86_64)   => ("$bin_prefix/IntelOpenMP.v2018.0.3.x86_64-apple-darwin14.tar.gz", "a5bb619e4364ce236bb2e8069b0c0c97a10e180cf899ebf987c9236f6dff6af2"),
 )
 
