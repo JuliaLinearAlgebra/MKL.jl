@@ -14,9 +14,9 @@ end
 # Write path to MKL
 lines = map(lines) do l
     if occursin(r"libblas_name", l)
-        return "const libblas_name = \"$libmkl_rt\"\n"
+        return "const libblas_name = $(repr(libmkl_rt))\n"
     elseif occursin(r"liblapack_name", l)
-        return "const liblapack_name = \"$libmkl_rt\"\n"
+        return "const liblapack_name = $(repr(libmkl_rt))\n"
     else
         return l
     end
