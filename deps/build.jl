@@ -29,4 +29,9 @@ open(fname, "w") do f
     end
 end
 
+sysimgpath = PackageCompiler.sysimgbackup_folder("native")
+if ispath(sysimgpath)
+    rm(sysimgpath, recursive=true)
+end
+
 force_native_image!()
