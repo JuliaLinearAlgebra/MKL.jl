@@ -6,7 +6,7 @@
 
 *MKL.jl* is a package that makes Julia's linear algebra use Intel MKL BLAS and LAPACK instead of OpenBLAS. The build step of the package will automatically download Intel MKL and rebuild Julia's system image against Intel MKL. Once the install has completed, you'll have
 
-```
+```julia
 julia> using LinearAlgebra
 
 julia> BLAS.vendor()
@@ -14,7 +14,7 @@ julia> BLAS.vendor()
 ```
 and all Julia's dense linear algebra routines ranging from matrix multiply, over solving linear systems of equations, to eigenvalue computations will be computed by Intel MKL. In many cases, this will greatly improve the execution time.
 
-### Warning
+### Caveats
 
 - Downstream binary libraries that depend on BLAS such as SuiteSparse (solving sparse linear systems) and ARPACK (for large scale eigevalue computations) will currently not work once MKL.jl has been installed. We are working on removing these limitations.
 
