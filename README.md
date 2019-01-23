@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/JuliaComputing/MKL.jl.svg?branch=master)](https://travis-ci.org/JuliaComputing/MKL.jl)
 [![Build status](https://ci.appveyor.com/api/projects/status/n37h9eagmnx1gly0/branch/master?svg=true)](https://ci.appveyor.com/project/andreasnoack/mkl-jl/branch/master)
 
-*MKL.jl* is a package that makes Julia's linear algebra use Intel MKL BLAS and LAPACK instead of OpenBLAS. The build step of the package will automatically download Intel MKL and rebuild Julia's system image against Intel MKL. Once the install has completed, you'll have
+*MKL.jl* is a package that makes Julia's linear algebra use Intel MKL BLAS and LAPACK instead of OpenBLAS. The build step of the package will automatically download Intel MKL and rebuild Julia's system image against Intel MKL. Note, MKL is proprieaty software (not MIT-licenced like this wrapper for it), and thus incompatible with GPL-licenced software; for distribution purposes, it's however always ok with the GPL to use together in private. Once the install has completed, you'll have
 
 ```julia
 julia> using LinearAlgebra
