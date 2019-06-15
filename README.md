@@ -4,7 +4,24 @@
 [![Build Status](https://travis-ci.org/JuliaComputing/MKL.jl.svg?branch=master)](https://travis-ci.org/JuliaComputing/MKL.jl)
 [![Build status](https://ci.appveyor.com/api/projects/status/n37h9eagmnx1gly0/branch/master?svg=true)](https://ci.appveyor.com/project/andreasnoack/mkl-jl/branch/master)
 
-*MKL.jl* is a package that makes Julia's linear algebra use Intel MKL BLAS and LAPACK instead of OpenBLAS. The build step of the package will automatically download Intel MKL and rebuild Julia's system image against Intel MKL. Once the install has completed, you'll have
+*MKL.jl* is a package that makes Julia's linear algebra use Intel MKL BLAS and LAPACK instead of OpenBLAS. The build step of the package will automatically download Intel MKL and rebuild Julia's system image against Intel MKL. 
+
+## To Install:
+
+```julia
+julia>]add https://github.com/JuliaComputing/MKL.jl
+```
+After building which takes some time restart Julia.
+
+If you get the `Intel MKL FATAL ERROR: Cannot load mkl_intel_thread.dll.` error, that means the required dlls are not on the path. You need to add the location that it was installed to your path. 
+On windows usually that is `C:\Users\%USERNAME%\.julia\packages\MKL\36eeJ\deps\usr\bin`. You can add it to your windows path by running the following commmand in cmd:
+```
+set PATH=%PATH%;C:\Users\%USERNAME%\.julia\packages\MKL\36eeJ\deps\usr\bin
+```
+
+## To Check Installation:
+
+Once the install has completed, you'll have
 
 ```julia
 julia> using LinearAlgebra
