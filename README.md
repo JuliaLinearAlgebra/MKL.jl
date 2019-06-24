@@ -16,7 +16,7 @@ After building which takes some time restart Julia.
 If you get the `Intel MKL FATAL ERROR: Cannot load mkl_intel_thread.dll.` error, that means the required dlls are not on the path. You need to add the location that it was installed to your path. 
 On windows usually that is `C:\Users\%USERNAME%\.julia\packages\MKL\36eeJ\deps\usr\bin`. You can add it to your windows path by running the following commmand in cmd:
 ```
-set PATH=%PATH%;C:\Users\%USERNAME%\.julia\packages\MKL\36eeJ\deps\usr\bin
+setx PATH=%PATH%;C:\Users\%USERNAME%\.julia\packages\MKL\36eeJ\deps\usr\bin
 ```
 
 ## To Check Installation:
