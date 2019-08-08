@@ -24,7 +24,7 @@ function lineedit(editor::Function, filename::String)
     lines = open(filename) do io
         readlines(io, keep=true)
     end
-    
+
     # Run user editor; if something goes wrong, just quit out
     try
         lines = editor(lines)
@@ -32,7 +32,7 @@ function lineedit(editor::Function, filename::String)
         @error("Error occured while running user line editor:", e)
         return nothing
     end
-    
+
     # Write it out, if the editor decides something needs to change
     if lines != nothing
         open(filename, "w") do io
@@ -56,6 +56,8 @@ function replace_libblas(base_dir, name)
                 return "const libblas_name = $(repr(name))\n"
             elseif occursin(r"liblapack_name", l)
                 return "const liblapack_name = $(repr(name))\n"
+            elseif occursin(r"USE_BLAS64", l)
+                return "const USE_BLAS64 = false"
             else
                 return l
             end
