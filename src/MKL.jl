@@ -51,4 +51,7 @@ module MKL
         (Ref{BlasInt}, Ptr{Float64}, Ref{BlasInt}),
         length(x), x, 1)
 
+
+    # Include installation routines as well
+    include("install.jl")
 end
