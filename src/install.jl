@@ -43,7 +43,9 @@ end
 
 function replace_libblas(base_dir, name)
     # Replace `libblas` and `liblapack` in build_h.jl
-    lineedit(joinpath(base_dir, "build_h.jl")) do lines
+    file = joinpath(base_dir, "build_h.jl")
+    lineedit(file) do lines
+        @info("Replacing libblas_name in $(file)")
         return map(lines) do l
             if occursin(r"libblas_name", l)
                 return "const libblas_name = $(repr(name))\n"
@@ -80,11 +82,12 @@ function force_proper_PATH(base_dir, dir_path)
     # within both `sysimg.jl` (for Julia 1.0 and 1.1) as well as `Base.jl` (for 1.2+)
 
     for file in ("sysimg.jl", "Base.jl")
+        @info("Checking $(file)")
         lineedit(joinpath(base_dir, file)) do lines
             # Find the start/end of `__init__()` within this file, if possible:
             init_start, init_end = find_init_func_bounds(lines)
             if init_start === nothing
-                @info("Found init function in $(file)")
+                @info("Could not find init function in $(file)")
                 return nothing
             end
 
@@ -103,6 +106,7 @@ function force_proper_PATH(base_dir, dir_path)
                 init_start + 1,
                 "    ENV[\"PATH\"] = string(ENV[\"PATH\"], $(repr(pathsep)), $(repr(dir_path)))",
             )
+            @info("Successfully modified $(file)")
             return lines
         end
     end
@@ -117,6 +121,7 @@ function enable_mkl_startup(libmkl_rt)
 
     # Force-setting `ENV["PATH"]` to include the location of MKL libraries
     # This is required on Windows, where we can't use RPATH
+    @info("Checking if we need to update PATH...")
     if Sys.iswindows()
         force_proper_PATH(base_dir, dirname(libmkl_rt))
     end
