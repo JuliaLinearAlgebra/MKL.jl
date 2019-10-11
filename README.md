@@ -9,19 +9,14 @@
 ## To Install:
 
 ```julia
-julia>]add https://github.com/JuliaComputing/MKL.jl
+julia>]add https://github.com/JuliaComputing/MKL.jl#sf/improve_installation_experience
 ```
-After installation it should build automatically (which takes some time). If building was not triggered automatically run the following command:
+After installation it should build automatically (which takes some time). If building was not triggered automatically (happens when MKL download is done already on the system) run the following command:
 ```julia
 ] build MKL
 ```
 Then after building restart Julia.
 
-If you get the `Intel MKL FATAL ERROR: Cannot load mkl_intel_thread.dll.` error, that means the required dlls are not on the path. You need to add the location that it was installed to your path. 
-On windows usually that is `C:\Users\%USERNAME%\.julia\packages\MKL\36eeJ\deps\usr\bin`. You can add it to your windows path by running the following commmand in cmd:
-```
-setx PATH=%PATH%;C:\Users\%USERNAME%\.julia\packages\MKL\36eeJ\deps\usr\bin
-```
 
 ## To Check Installation:
 
