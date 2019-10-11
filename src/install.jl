@@ -93,8 +93,7 @@ function force_proper_PATH(base_dir, dir_path)
 
             # Scan the function for mentions of our `dir_path`; if it already exists,
             # then call it good, returning `nothing` so the file is not modified.
-            dir_path_regex = Regex(string("\\s+ENV\\[\"PATH\"\\] = .*$(dir_path).*"))
-            if any(match.(dir_path_regex, lines[init_start+1:init_end-1]))
+            if any(match.(r"\s+ENV\[\"PATH\"\] =", lines[init_start+1:init_end-1]) .!= nothing)
                 @info("Found ENV already")
                 return nothing
             end
@@ -104,7 +103,7 @@ function force_proper_PATH(base_dir, dir_path)
             insert!(
                 lines,
                 init_start + 1,
-                "    ENV[\"PATH\"] = string(ENV[\"PATH\"], $(repr(pathsep)), $(repr(dir_path)))",
+                "    ENV[\"PATH\"] = string(ENV[\"PATH\"], $(repr(pathsep)), $(repr(dir_path)))\n",
             )
             @info("Successfully modified $(file)")
             return lines
