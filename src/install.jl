@@ -4,7 +4,7 @@ using PackageCompiler
     lineedit(editor::Function, filename::String)
 
 Easily edit a file, line by line.  If your `editor` function returns `nothing` the
-file is not modified.  Usage example:
+file is not modified.  If the file does not exist, silently fails.  Usage example:
 
     lineedit("foo.jl") do lines
         map(lines) do l
@@ -16,6 +16,11 @@ file is not modified.  Usage example:
     end
 """
 function lineedit(editor::Function, filename::String)
+    # Silently fail for files that don't exist
+    if !isfile(filename)
+        return nothing
+    end
+
     lines = open(filename) do io
         readlines(io, keep=true)
     end
