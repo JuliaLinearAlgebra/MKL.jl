@@ -11,9 +11,9 @@
 ```julia
 julia>]add https://github.com/JuliaComputing/MKL.jl
 ```
-After installation it should build automatically (which takes some time). If building was not triggered automatically (happens when MKL download is done already on the system) run the following command:
+After installation it should build automatically (which takes some time). If building was not triggered automatically (happens when MKL download is done already on the system), run the following command:
 ```julia
-] build MKL
+julia>] build MKL
 ```
 Then after building restart Julia.
 
@@ -29,11 +29,3 @@ julia> BLAS.vendor()
 :mkl
 ```
 and all Julia's dense linear algebra routines ranging from matrix multiply, over solving linear systems of equations, to eigenvalue computations will be computed by Intel MKL. In many cases, this will greatly improve the execution time.
-
-### Caveats
-
-- Downstream binary libraries that depend on BLAS such as SuiteSparse (solving sparse linear systems) and ARPACK (for large scale eigevalue computations) will currently not work once MKL.jl has been installed. We are working on removing these limitations.
-
-- It is not possible to revert the effect of install MKL.jl. To return to OpenBLAS, it is necessary to reinstall Julia.
-
-- The current version of MKL.jl doesn't have access to the same precompilation information as the official binaries and source builds so the REPL will have more latency after MKL.jl has been installed. It should be possible to fix this once Julia 1.1 has been released. See https://github.com/JuliaComputing/MKL.jl/issues/1.
