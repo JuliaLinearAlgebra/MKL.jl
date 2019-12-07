@@ -1,11 +1,10 @@
 using PackageCompiler
 
-
 jl_dev_ver = length(VERSION.prerelease) == 2 && (VERSION.prerelease)[1] == "DEV" # test if running nightly/unreleased version
-
 jl_gh_tag = jl_dev_ver ? "master" : "release-$(VERSION.major).$(VERSION.minor)"
-
 prec_jl_url = "https://raw.githubusercontent.com/JuliaLang/julia/$jl_gh_tag/contrib/generate_precompile.jl"
+
+@info "getting precompile script from: $prec_jl_url"
 
 prec_jl_fn = "generate_precompile.jl"
 download(prec_jl_url, prec_jl_fn)
