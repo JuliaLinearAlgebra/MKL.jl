@@ -8,8 +8,10 @@ include("deps.jl")
 include("../src/install.jl")
 enable_mkl_startup(libmkl_rt)
 
-
-julia_ = joinpath(Sys.BINDIR, Base.julia_exename())
-cmd = `$julia_ fix_repl.jl`
-
-run(cmd)
+try
+    julia_ = joinpath(Sys.BINDIR, Base.julia_exename())
+    cmd = `$julia_ fix_repl.jl`
+    run(cmd)
+catch
+    @warn "Rebuilding system image with precompiling failed. This may lead to REPL latency."
+end
