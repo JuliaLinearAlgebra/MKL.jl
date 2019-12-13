@@ -1,7 +1,6 @@
 environment:
   matrix:
-  - julia_version: 1
-  - julia_version: nightly
+  - julia_version: 1.3
 
 platform:
   # - x86 # 32-bit
@@ -29,6 +28,7 @@ install:
 
 build_script:
   - echo "%JL_BUILD_SCRIPT%"
+  - C:\julia\bin\julia -e "using Pkg;Pkg.add(PackageSpec(url=\"https://github.com/KristofferC/PackageCompilerX.jl\"))"
   - C:\julia\bin\julia -e "%JL_BUILD_SCRIPT%"
 
 test_script:
