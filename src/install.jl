@@ -1,4 +1,4 @@
-using PackageCompiler
+using PackageCompilerX
 
 """
     lineedit(editor::Function, filename::String)
@@ -24,7 +24,7 @@ function lineedit(editor::Function, filename::String)
     lines = open(filename) do io
         readlines(io, keep=true)
     end
-    
+
     # Run user editor; if something goes wrong, just quit out
     try
         lines = editor(lines)
@@ -32,7 +32,7 @@ function lineedit(editor::Function, filename::String)
         @error("Error occured while running user line editor:", e)
         return nothing
     end
-    
+
     # Write it out, if the editor decides something needs to change
     if lines != nothing
         open(filename, "w") do io
@@ -116,6 +116,32 @@ function force_proper_PATH(base_dir, dir_path)
     end
 end
 
+function generate_precompile_statments()
+    jl_dev_ver = length(VERSION.prerelease) == 2 && (VERSION.prerelease)[1] == "DEV" # test if running nightly/unreleased version
+    jl_gh_tag = jl_dev_ver ? "master" : "release-$(VERSION.major).$(VERSION.minor)"
+    prec_jl_url = "https://raw.githubusercontent.com/JuliaLang/julia/$jl_gh_tag/contrib/generate_precompile.jl"
+
+    @info "getting precompile script from: $prec_jl_url"
+
+    prec_jl_fn = "generate_precompile.jl"
+    download(prec_jl_url, prec_jl_fn)
+    prec_jl_content = read(prec_jl_fn, String)
+    patch = "@info(\"processed: \$n_succeeded\")\ncp(precompile_file, \"precomp_stmt.jl\", force=true)"
+    open(prec_jl_fn, "w") do f
+       write(f, replace(prec_jl_content, "@assert n_succeeded > 3500" => patch))
+    end
+
+    try
+        julia_ = joinpath(Sys.BINDIR, Base.julia_exename())
+        cmd = `$julia_ $prec_jl_fn`
+        run(cmd)
+    catch
+        @warn "Rebuilding system image with precompiling failed. This may lead to REPL latency."
+    end
+
+end
+
+
 function enable_mkl_startup(libmkl_rt)
     # First, we need to modify a few files in Julia's base directory
     base_dir = joinpath(Sys.BINDIR, Base.DATAROOTDIR, "julia", "base")
@@ -131,11 +157,8 @@ function enable_mkl_startup(libmkl_rt)
     end
 
     # Next, build a new system image
-    sysimgpath = PackageCompiler.sysimgbackup_folder("native")
-    if ispath(sysimgpath)
-        rm(sysimgpath, recursive=true)
-    end
-    force_native_image!()
+    generate_precompile_statments()
+    PackageCompilerX.create_sysimage(:MKL, cpu_target="native", precompile_statements_file="precomp_stmt.jl", incremental=false, replace_default=false, sysimage_path="/Users/david/code/julia_mkl/MKL.jl/sysimg/out") #! replace & no path
 end
 
 function enable_openblas_startup(libopenblas = "libopenblas")
