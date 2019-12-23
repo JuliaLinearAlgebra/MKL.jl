@@ -1,4 +1,4 @@
-name = "MKL"
+name = "IntelMKL"
 uuid = "33e6dc65-8f57-5167-99aa-e5a354878fb2"
 version = "0.1"
 

@@ -1,4 +1,4 @@
-module MKL
+module IntelMKL
 
     using Libdl
     using LinearAlgebra: BlasInt
