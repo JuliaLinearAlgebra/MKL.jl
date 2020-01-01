@@ -56,6 +56,8 @@ function replace_libblas(base_dir, name)
                 return "const libblas_name = $(repr(name))\n"
             elseif occursin(r"liblapack_name", l)
                 return "const liblapack_name = $(repr(name))\n"
+            elseif occursin(r"USE_BLAS64", l)
+                return "const USE_BLAS64 = false\n"
             else
                 return l
             end
