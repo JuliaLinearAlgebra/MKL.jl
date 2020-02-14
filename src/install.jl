@@ -125,6 +125,9 @@ function get_precompile_statments_file()
 
     prec_jl_fn = tempname()
     download(prec_jl_url, prec_jl_fn)
+    prec_jl_content = read(prec_jl_fn, String)
+    # PackageCompiler.jl already inits stdio and double initing it leads to bad things
+    write(prec_jl_fn, replace(prec_jl_content, "Base.reinit_stdio()" => "# Base.reinit_stdio()"))
     return prec_jl_fn
 end
 
@@ -137,7 +140,8 @@ function enable_mkl_startup(libmkl_rt=MKL_jll.libmkl_rt)
     insert_MKL_load(base_dir)
 
     # Next, build a new system image
-    PackageCompiler.create_sysimage(; incremental=false, replace_default=true, script="generate_precompile.jl")
+    PackageCompiler.create_sysimage(; incremental=false, replace_default=true,
+                                    script=get_precompile_statments_file())
 end
 
 function enable_openblas_startup(libopenblas = "libopenblas")
@@ -152,5 +156,6 @@ function enable_openblas_startup(libopenblas = "libopenblas")
     remove_MKL_load(base_dir)
 
     # Next, build a new system image
-    PackageCompiler.create_sysimage(; incremental=false, replace_default=true) #, script=get_precompile_statments_file())
+    PackageCompiler.create_sysimage(; incremental=false, replace_default=true,
+                                      script=get_precompile_statments_file())
 end
