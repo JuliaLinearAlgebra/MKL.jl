@@ -1,4 +1,4 @@
-using PackageCompilerX
+using PackageCompiler
 
 """
     lineedit(editor::Function, filename::String)
@@ -157,9 +157,9 @@ function enable_mkl_startup(libmkl_rt)
     end
 
     # Next, build a new system image
-    PackageCompilerX.create_sysimage(:MKL, cpu_target="native", incremental=false, replace_default=true)
+    PackageCompiler.create_sysimage(:MKL, cpu_target="native", incremental=false, replace_default=true)
     generate_precompile_statments()
-    PackageCompilerX.create_sysimage(:MKL, cpu_target="native", precompile_statements_file="precomp_stmt.jl", incremental=true, replace_default=true)
+    PackageCompiler.create_sysimage(:MKL, cpu_target="native", precompile_statements_file="precomp_stmt.jl", incremental=true, replace_default=true)
 end
 
 function enable_openblas_startup(libopenblas = "libopenblas")
@@ -173,7 +173,7 @@ function enable_openblas_startup(libopenblas = "libopenblas")
     replace_libblas(base_dir, libopenblas)
 
     # Next, build a new system image
-    PackageCompilerX.create_sysimage(:MKL, cpu_target="native", incremental=false, replace_default=true)
+    PackageCompiler.create_sysimage(:MKL, cpu_target="native", incremental=false, replace_default=true)
     generate_precompile_statments()
-    PackageCompilerX.create_sysimage(:MKL, cpu_target="native", precompile_statements_file="precomp_stmt.jl", incremental=true, replace_default=true)
+    PackageCompiler.create_sysimage(:MKL, cpu_target="native", precompile_statements_file="precomp_stmt.jl", incremental=true, replace_default=true)
 end

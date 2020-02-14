@@ -12,5 +12,5 @@ before_script:
   # change. This has two effects:
   #   1. it avoids Travis timing out because the build outputs nothing
   #   2. it makes it more obvious what part of the build, if any, gets stuck
-  - julia -e 'using Pkg;Pkg.add(PackageSpec(url="https://github.com/KristofferC/PackageCompilerX.jl"))'
+  - julia -e 'using Pkg;Pkg.add(PackageSpec(name="PackageCompiler", rev="master"))'
   - while sleep 30; do tail ./deps/build.log -f ; done &

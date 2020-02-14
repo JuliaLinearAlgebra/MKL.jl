@@ -1,5 +1,5 @@
 using Libdl
-using PackageCompilerX
+using PackageCompiler
 
 include("build_IntelOpenMP.jl")
 include("build_MKL.jl")
