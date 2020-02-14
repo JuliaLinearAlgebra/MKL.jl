@@ -1,66 +1,16 @@
-using PackageCompiler
-
-"""
-    lineedit(editor::Function, filename::String)
-
-Easily edit a file, line by line.  If your `editor` function returns `nothing` the
-file is not modified.  If the file does not exist, silently fails.  Usage example:
-
-    lineedit("foo.jl") do lines
-        map(lines) do l
-            if occursin(r"libblas_name", l)
-                return "const libblas_name = \"libfoo.so\"\n"
-            end
-            return l
-        end
-    end
-"""
-function lineedit(editor::Function, filename::String)
-    # Silently fail for files that don't exist
-    if !isfile(filename)
-        return nothing
-    end
-
-    lines = open(filename) do io
-        readlines(io, keep=true)
-    end
-
-    # Run user editor; if something goes wrong, just quit out
-    try
-        lines = editor(lines)
-    catch e
-        @error("Error occured while running user line editor:", e)
-        return nothing
-    end
-
-    # Write it out, if the editor decides something needs to change
-    if lines != nothing
-        open(filename, "w") do io
-            for l in lines
-                write(io, l)
-            end
-        end
-    end
-
-    # Return the lines, just for fun
-    return lines
-end
-
 function replace_libblas(base_dir, name)
-    # Replace `libblas` and `liblapack` in build_h.jl
     file = joinpath(base_dir, "build_h.jl")
-    lineedit(file) do lines
-        @info("Replacing libblas_name in $(repr(file))")
-        return map(lines) do l
-            if occursin(r"libblas_name", l)
-                return "const libblas_name = $(repr(name))\n"
-            elseif occursin(r"liblapack_name", l)
-                return "const liblapack_name = $(repr(name))\n"
-            else
-                return l
-            end
-        end
-    end
+    lines = readlines(file)
+
+    libblas_idx   = findfirst(match.(r"const libblas_name", lines)   .!= nothing)
+    liblapack_idx = findfirst(match.(r"const liblapack_name", lines) .!= nothing)
+
+    @assert libblas_idx !== nothing && liblapack_idx !== nothing
+
+    lines[libblas_idx] = "const libblas_name = $(repr(name))"
+    lines[liblapack_idx] = "const liblapack_name = $(repr(name))"
+
+    write(file, string(join(lines, '\n'), '\n'))
 end
 
 # Used to insert a load of MKL.jl before the stdlibs and run the __init__ explicitly
@@ -120,9 +70,7 @@ function get_precompile_statments_file()
     jl_dev_ver = length(VERSION.prerelease) == 2 && (VERSION.prerelease)[1] == "DEV" # test if running nightly/unreleased version
     jl_gh_tag = jl_dev_ver ? "master" : "release-$(VERSION.major).$(VERSION.minor)"
     prec_jl_url = "https://raw.githubusercontent.com/JuliaLang/julia/$jl_gh_tag/contrib/generate_precompile.jl"
-
     @info "getting precompile script from: $prec_jl_url"
-
     prec_jl_fn = tempname()
     download(prec_jl_url, prec_jl_fn)
     prec_jl_content = read(prec_jl_fn, String)
@@ -131,31 +79,32 @@ function get_precompile_statments_file()
     return prec_jl_fn
 end
 
-function enable_mkl_startup(libmkl_rt=MKL_jll.libmkl_rt)
-# First, we need to modify a few files in Julia's base directory
-    base_dir = joinpath(Sys.BINDIR, Base.DATAROOTDIR, "julia", "base")
+enable_mkl_startup() = change_blas_library(MKL_jll.libmkl_rt)
+enable_openblas_startup() = change_blas_library("libopenblas")
 
-    # Replace definitions of `libblas_name`, etc.. to point to MKL
-    replace_libblas(base_dir, libmkl_rt)
-    insert_MKL_load(base_dir)
+function change_blas_library(libblas)
 
-    # Next, build a new system image
-    PackageCompiler.create_sysimage(; incremental=false, replace_default=true,
-                                    script=get_precompile_statments_file())
-end
-
-function enable_openblas_startup(libopenblas = "libopenblas")
     # First, we need to modify a few files in Julia's base directory
     base_dir = joinpath(Sys.BINDIR, Base.DATAROOTDIR, "julia", "base")
-
-    # Replace definitions of `libblas_name`, etc.. to point to MKL
-    if Sys.WORD_SIZE == 64
-        libopenblas = "$(libopenblas)64_"
+    if libblas == "libopenblas"
+        if Sys.WORD_SIZE == 64
+            libblas = "$(libblas)64_"
+        end
+        remove_MKL_load(base_dir)
+    else
+        insert_MKL_load(base_dir)
     end
-    replace_libblas(base_dir, libopenblas)
-    remove_MKL_load(base_dir)
+
+    # Replace definitions of `libblas_name`, etc.. to point to MKL or OpenBLAS
+    replace_libblas(base_dir, libblas)
 
     # Next, build a new system image
-    PackageCompiler.create_sysimage(; incremental=false, replace_default=true,
-                                      script=get_precompile_statments_file())
+    # We don't want to load PackageCompiler in top level scope because
+    # we will put MKL.jl in the sysimage and having PackageCompiler loaded
+    # means it will also be put there
+    @eval begin
+        using PackageCompiler
+        PackageCompiler.create_sysimage(; incremental=false, replace_default=true,
+                                        script=get_precompile_statments_file())
+    end
 end
