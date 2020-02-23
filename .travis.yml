@@ -12,6 +12,5 @@ notifications:
   email: false
 
 script:
-    julia --project="" -e 'using Pkg; Pkg.add(PackageSpec(name ="PackageCompiler", rev="master"))'; 
     julia --project="" -e 'using Pkg; Pkg.develop(PackageSpec(path=".")); Pkg.build("MKL"; verbose=true); Pkg.test("MKL")'
 
