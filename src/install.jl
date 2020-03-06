@@ -4,11 +4,15 @@ function replace_libblas(base_dir, name)
 
     libblas_idx   = findfirst(match.(r"const libblas_name", lines)   .!= nothing)
     liblapack_idx = findfirst(match.(r"const liblapack_name", lines) .!= nothing)
+    useblas64_idx = findfirst(match.(r"USE_BLAS64", lines) .!= nothing)
 
     @assert libblas_idx !== nothing && liblapack_idx !== nothing
 
     lines[libblas_idx] = "const libblas_name = $(repr(name))"
     lines[liblapack_idx] = "const liblapack_name = $(repr(name))"
+    if useblas64_idx != nothing
+        lines[useblas64_idx] = "const USE_BLAS64 = false"
+    end
 
     write(file, string(join(lines, '\n'), '\n'))
 end
