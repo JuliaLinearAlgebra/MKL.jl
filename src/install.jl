@@ -13,38 +13,44 @@ function replace_libblas(base_dir, name)
     write(file, string(join(lines, '\n'), '\n'))
 end
 
-# Used to insert a load of MKL.jl before the stdlibs and run the __init__ explicitly
-# since these need to have been run when LinearAlgebra loads and determines
-# what BLAS vendor is used.
+const MKL_PAYLOAD_START = "#== START MKL INSERT ==#"
+const MKL_PAYLOAD_END = "#== END MKL INSERT ==#"
+
+# Generates the code for the loading of MKL.jl before the stdlibs and running
+# the __init__() explicitly, since these need to have been run when
+# LinearAlgebra loads and determines what BLAS vendor is used.
 # We also have to push to LOAD_PATH since at this stage only @stdlibs
 # is in LOAD_PATH and MKL.jl can thus not be found.
-const MKL_PAYLOAD = """
-    # START MKL INSERT
-    pushfirst!(LOAD_PATH, "@v#.#")
-    pushfirst!(LOAD_PATH, "@")
-    MKL = Base.require(Base, :MKL)
-    MKL.MKL_jll.__init__()
-    MKL.__init__()
-    popfirst!(LOAD_PATH)
-    popfirst!(LOAD_PATH)
-    # END MKL INSERT"""
+function MKL_loading_code(load_paths::AbstractVector{<:AbstractString})
+    res = [MKL_PAYLOAD_START]
+    for path in load_paths
+        push!(res, string("pushfirst!(LOAD_PATH, \"", escape_string(path), "\")"))
+    end
+    push!(res, "MKL = Base.require(Base, :MKL)")
+    push!(res, "MKL.MKL_jll.__init__()")
+    push!(res, "MKL.__init__()")
+    for _ in eachindex(load_paths)
+        push!(res, "popfirst!(LOAD_PATH)")
+    end
+    push!(res, MKL_PAYLOAD_END)
+    return res
+end
 
-const MKL_PAYLOAD_LINES = split(MKL_PAYLOAD, '\n')
-
-function insert_MKL_load(base_dir)
+function insert_MKL_load(base_dir, load_paths::AbstractVector{<:AbstractString})
     file = joinpath(base_dir, "sysimg.jl")
     @info "Splicing in code to load MKL in $(file)"
     lines = readlines(file)
 
     # Be idempotent
-    if MKL_PAYLOAD_LINES[1] in lines
+    if MKL_PAYLOAD_START in lines
+        @warn "Skipping injection of MKL into $file: existing MKL loading code detected"
         return
     end
 
     # After this the stdlibs get included, so insert MKL to be loaded here
     start_idx = findfirst(match.(r"Base._track_dependencies\[\] = true", lines) .!= nothing)
 
-    splice!(lines, (start_idx + 1):start_idx, MKL_PAYLOAD_LINES)
+    splice!(lines, (start_idx + 1):start_idx, MKL_loading_code(load_paths))
     write(file, string(join(lines, '\n'), '\n'))
     return
 end
@@ -54,10 +60,15 @@ function remove_MKL_load(base_dir)
     @info "Removing code to load MKL in $(file)"
     lines = readlines(file)
 
-    start_idx = findfirst(==(MKL_PAYLOAD_LINES[1]), lines)
-    end_idx = findfirst(==(MKL_PAYLOAD_LINES[end]), lines)
+    start_idx = findfirst(==(MKL_PAYLOAD_START), lines)
+    end_idx = findfirst(==(MKL_PAYLOAD_END), lines)
 
     if start_idx === nothing || end_idx === nothing
+        if start_idx !== nothing || end_idx !== nothing
+            @warn "Incomplete MKL loading code detected, check $file"
+        else
+            @warn "No MKL loading code detected in $file"
+        end
         return
     end
 
@@ -79,10 +90,14 @@ function get_precompile_statments_file()
     return prec_jl_fn
 end
 
-enable_mkl_startup() = change_blas_library(MKL_jll.libmkl_rt)
+default_mkl_load_paths() = haskey(ENV, "JULIA_MKL_LOAD_PATH") ?
+    split(ENV["JULIA_MKL_LOAD_PATH"], ':') : ["@v#.#", "@"]
+enable_mkl_startup(; load_paths::AbstractVector{<:AbstractString} = default_mkl_load_paths()) =
+    change_blas_library(MKL_jll.libmkl_rt, load_paths=load_paths)
 enable_openblas_startup() = change_blas_library("libopenblas")
 
-function change_blas_library(libblas)
+function change_blas_library(libblas; load_paths::Union{Nothing, AbstractVector{<:AbstractString}} = nothing)
+    @info "Using $libblas as the default BLAS library for Julia"
 
     # First, we need to modify a few files in Julia's base directory
     base_dir = joinpath(Sys.BINDIR, Base.DATAROOTDIR, "julia", "base")
@@ -92,7 +107,7 @@ function change_blas_library(libblas)
         end
         remove_MKL_load(base_dir)
     else
-        insert_MKL_load(base_dir)
+        insert_MKL_load(base_dir, load_paths)
     end
 
     # Replace definitions of `libblas_name`, etc.. to point to MKL or OpenBLAS
