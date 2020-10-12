@@ -8,7 +8,7 @@
 ## To Install:
 
 ```julia
-julia>]add https://github.com/JuliaComputing/MKL.jl
+julia>] add MKL
 ```
 After installation it should build automatically (which takes some time). If building was not triggered automatically (happens when MKL download is done already on the system), run the following command:
 ```julia
