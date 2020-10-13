@@ -1,6 +1,6 @@
 name = "MKL"
 uuid = "33e6dc65-8f57-5167-99aa-e5a354878fb2"
-version = "0.2.0"
+version = "0.3.0"
 
 [deps]
 Libdl = "8f399da3-3557-5675-b5ff-fb832c97cbdb"
