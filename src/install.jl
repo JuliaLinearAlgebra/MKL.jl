@@ -4,14 +4,35 @@ function replace_libblas(base_dir, name)
 
     libblas_idx   = findfirst(match.(r"const libblas_name", lines)   .!= nothing)
     liblapack_idx = findfirst(match.(r"const liblapack_name", lines) .!= nothing)
+    useblas64_idx = findfirst(match.(r"USE_BLAS64", lines) .!= nothing)
+    revertline = lines[useblas64_idx] #save to revert to previously set variable
 
     @assert libblas_idx !== nothing && liblapack_idx !== nothing
 
     lines[libblas_idx] = "const libblas_name = $(repr(name))"
     lines[liblapack_idx] = "const liblapack_name = $(repr(name))"
+    if useblas64_idx != nothing
+        if USEBLAS64
+            lines[useblas64_idx] = "const USE_BLAS64 = true"
+        else
+            lines[useblas64_idx] = "const USE_BLAS64 = false"
+        end
+    end
+
+    write(file, string(join(lines, '\n'), '\n'))
+    return revertline
+end
+
+function revert_blas64(base_dir, name,revertline)
+    file = joinpath(base_dir, "build_h.jl")
+    lines = readlines(file)
+
+    useblas64_idx = findfirst(match.(r"USE_BLAS64", lines) .!= nothing)
+    lines[useblas64_idx] = revertline
 
     write(file, string(join(lines, '\n'), '\n'))
 end
+
 
 # Used to insert a load of MKL.jl before the stdlibs and run the __init__ explicitly
 # since these need to have been run when LinearAlgebra loads and determines
@@ -96,7 +117,7 @@ function change_blas_library(libblas)
     end
 
     # Replace definitions of `libblas_name`, etc.. to point to MKL or OpenBLAS
-    replace_libblas(base_dir, libblas)
+    revertline = replace_libblas(base_dir, libblas)
 
     # Next, build a new system image
     # We don't want to load PackageCompiler in top level scope because
@@ -107,4 +128,7 @@ function change_blas_library(libblas)
         PackageCompiler.create_sysimage(; incremental=false, replace_default=true,
                                         script=get_precompile_statments_file())
     end
+
+    # revert const USE_BLAS64 to initial state
+    revert_blas64(base_dir,libblas,revertline)
 end
