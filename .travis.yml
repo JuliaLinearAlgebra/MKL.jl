@@ -6,7 +6,6 @@ os:
   - osx
 
 julia:
-  - 1
   - nightly
 
 jobs:
@@ -18,4 +17,3 @@ notifications:
 
 script:
     julia --project="" -e 'using Pkg; Pkg.develop(PackageSpec(path=".")); Pkg.build("MKL"; verbose=true); Pkg.test("MKL")'
-
