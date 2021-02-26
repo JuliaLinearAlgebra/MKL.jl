@@ -16,4 +16,4 @@ notifications:
   email: false
 
 script:
-    julia --project="" -e 'using Pkg; Pkg.develop(PackageSpec(path=".")); Pkg.build("MKL"; verbose=true); Pkg.test("MKL")'
+    julia --project="" -e 'using Pkg; Pkg.add(url="git@github.com:JuliaLinearAlgebra/MKL.jl", rev="lbt"); Pkg.test("MKL")'
