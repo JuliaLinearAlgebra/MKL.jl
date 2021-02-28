@@ -47,5 +47,4 @@ jobs:
           using Pkg
           Pkg.develop(PackageSpec(path="."))
           Pkg.build("MKL"; verbose=true)
-	  Pkg.test("MKL")
       - uses: julia-actions/julia-runtest@latest
