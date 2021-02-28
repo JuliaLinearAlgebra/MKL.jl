@@ -1,3 +1,7 @@
+if VERSION > v"1.6"
+    exit() # Don't want to build the system image, since we will use LBT
+end
+
 using PackageCompiler
 using MKL_jll
 
