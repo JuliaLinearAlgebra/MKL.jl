@@ -27,4 +27,6 @@ LinearAlgebra.BLAS.LBTConfig(LinearAlgebra.BLAS.LBTLibraryInfo[LinearAlgebra.BLA
 
 ## Using the 64-bit vs 32-bit version of MKL
 
-By default, when building *MKL.jl* the 32-bit version of MKL is installed. This is due to frequently encountered compatibility issues with the MKL version linked to *numpy*, that by default is shipped with the 32-bit version of MKL. To use the 64-bit version of MKL set the environment variable `ENV["USE_BLAS64"] = true` before building *MKL.jl*. This is not supported on Julia v1.7 yet.
+By default, when building *MKL.jl* the 32-bit version of MKL is installed. This is due to frequently encountered compatibility issues with the MKL version linked to *numpy*, that by default is shipped with the 32-bit version of MKL. To use the 64-bit version of MKL set the environment variable `ENV["USE_BLAS64"] = true` before building *MKL.jl*. 
+
+On Julia v1.7, we use ILP64 by default on 64-bit systems, and LP64 on 32-bit systems.
