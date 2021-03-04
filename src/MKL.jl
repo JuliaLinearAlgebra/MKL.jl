@@ -1,7 +1,9 @@
 module MKL
 
 using MKL_jll
-VERSION > v"1.7.0-DEV.623" && using LinearAlgebra
+
+JULIA_VER_NEEDED = v"1.7.0-DEV.641"
+VERSION > JULIA_VER_NEEDED && using LinearAlgebra
 
 if Base.USE_BLAS64
     const MKLBlasInt = Int64
@@ -39,7 +41,7 @@ function __init__()
     if MKL_jll.is_available()
         set_threading_layer()
         set_interface_layer()
-        VERSION > v"1.7.0-DEV.623" && BLAS.lbt_forward(libmkl_rt, clear=true)
+        VERSION > JULIA_VER_NEEDED && BLAS.lbt_forward(libmkl_rt, clear=true)
     end
 end
 
@@ -49,6 +51,6 @@ function mklnorm(x::Vector{Float64})
           length(x), x, 1)
 end
 
-VERSION > v"1.7.0-DEV.623" && include("install.jl")
+VERSION > JULIA_VER_NEEDED && include("install.jl")
 
 end # module
