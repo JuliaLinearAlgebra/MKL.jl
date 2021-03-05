@@ -1,5 +1,6 @@
 using LinearAlgebra
 using MKL
+using MKL_jll
 using Test
 
 if VERSION > MKL.JULIA_VER_NEEDED
@@ -8,4 +9,4 @@ else
     @test BLAS.vendor() == :mkl
 end
 
-@test peakflops() > 0
+@test LinearAlgebra.peakflops() > 0
