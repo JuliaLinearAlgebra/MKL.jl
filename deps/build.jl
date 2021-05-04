@@ -1,4 +1,6 @@
-if VERSION > v"1.6"
+using MKL
+
+if VERSION > MKL.JULIA_VER_NEEDED
     exit() # Don't want to build the system image, since we will use LBT
 end
 
