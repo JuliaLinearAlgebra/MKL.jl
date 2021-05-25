@@ -1,6 +1,6 @@
 name = "MKL"
 uuid = "33e6dc65-8f57-5167-99aa-e5a354878fb2"
-version = "0.4.0"
+version = "0.4.1"
 
 [deps]
 Artifacts = "56f22d72-fd6d-98f1-02f0-08ddc0907c33"
