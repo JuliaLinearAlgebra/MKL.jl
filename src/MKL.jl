@@ -1,9 +1,38 @@
 module MKL
 
-using MKL_jll
+using Preferences
 
-JULIA_VER_NEEDED = v"1.7.0-DEV.641"
-VERSION > JULIA_VER_NEEDED && using LinearAlgebra
+const JULIA_VER_NEEDED = v"1.7.0-DEV.641"
+is_lbt_available() = VERSION > JULIA_VER_NEEDED
+
+const use_jll = parse(Bool, @load_preference("use_jll", "true"))
+
+const MKL_uuid = Base.PkgId(MKL).uuid
+@show use_jll
+@show has_preference(MKL_uuid, "use_jll")
+@show load_preference(MKL_uuid, "use_jll")
+
+if use_jll
+    # MKL_jll
+    using MKL_jll
+    MKL_jll.is_available() || error("MKL.jl not properly configured, please run `Pkg.build(\"MKL\")`.")
+else
+    # System MKL
+    using Libdl
+    mkl_path = @load_preference("mkl_path", "")
+    @show mkl_path
+    const libmkl_core = find_library(["libmkl_core"], mkl_path == "" ? [""] : [mkl_path])
+    @show libmkl_core
+    const libmkl_rt = find_library(["libmkl_rt"], mkl_path == "" ? [""] : [mkl_path])
+    @show libmkl_rt
+    @show x = dlopen(libmkl_rt)
+    @show dlclose(x)
+    if libmkl_core == "" || libmkl_rt == ""
+        error("MKL.jl not properly configured, please run `Pkg.build(\"MKL\")`.")
+    end
+end
+
+is_lbt_available() && using LinearAlgebra
 
 if Base.USE_BLAS64
     const MKLBlasInt = Int64
@@ -38,11 +67,11 @@ function set_interface_layer(interface = Base.USE_BLAS64 ? INTERFACE_ILP64 : INT
 end
 
 function __init__()
-    if MKL_jll.is_available()
-        set_threading_layer()
-        set_interface_layer()
-        VERSION > JULIA_VER_NEEDED && BLAS.lbt_forward(libmkl_rt, clear=true)
-    end
+    # if MKL_jll.is_available()
+    # set_threading_layer()
+    # set_interface_layer()
+    # is_lbt_available() && BLAS.lbt_forward(libmkl_rt, clear=true)
+    # end
 end
 
 function mklnorm(x::Vector{Float64})
@@ -51,6 +80,7 @@ function mklnorm(x::Vector{Float64})
           length(x), x, 1)
 end
 
-VERSION > JULIA_VER_NEEDED && include("install.jl")
+# Carsten: Unnecessary?!
+is_lbt_available() && include("install.jl")
 
 end # module
