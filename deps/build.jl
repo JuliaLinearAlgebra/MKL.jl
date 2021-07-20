@@ -5,7 +5,7 @@ if MKL.is_lbt_available()
     exit() # Don't want to build the system image, since we will use LBT
 end
 
-@info "Using PackageCompiler"
+@info "LBT unavailable, so using PackageCompiler, to construct MKL-compatible system image"
 using PackageCompiler
 using MKL_jll
 
