@@ -1,7 +1,7 @@
 using MKL
 
 if MKL.is_lbt_available()
-    @info "Using LBT"
+    @info "Using LBT, so exiting MKL build step immediately"
     exit() # Don't want to build the system image, since we will use LBT
 end
 
