@@ -5,12 +5,14 @@
 
 ## To Install:
 
+On Julia 1.7 and later:
 ```julia
-julia>] add MKL
+julia> using Pkg; Pkg.add("MKL")
 ```
-On Julia 1.7 and later, nothing further is necessary. On older releases of Julia, a new system image build happens right after installation. If it doesn't (happens when MKL_jll.jl has been installed before), run the following command to build a new system image and restart Julia.
+
+On 1.6 and earlier, a new system image is built upon installing this package. If it doesn't happen successfully (happens when MKL_jll.jl has been installed before), run the following command to build a new system image and restart Julia.
 ```julia
-julia>] build MKL
+julia> using Pkg; Pkg.build("MKL")
 ```
 
 ## To Check Installation:
