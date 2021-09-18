@@ -9,4 +9,4 @@ end
 
 @test LinearAlgebra.peakflops() > 0
 
-Pkg.test("LinearAlgebra")
+include(joinpath(Sys.STDLIB, "LinearAlgebra", "test", "runtests.jl"))
