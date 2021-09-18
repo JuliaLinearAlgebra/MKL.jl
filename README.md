@@ -1,7 +1,9 @@
 # MKL.jl
-## Intel MKL linear algebra in Julia.
+## Using Julia with Intel's MKL
 
-*MKL.jl* is a package that makes Julia's linear algebra use Intel MKL BLAS and LAPACK instead of OpenBLAS. The build step of the package will automatically download Intel MKL and rebuild Julia's system image against Intel MKL for Julia versions prior to v1.7. On Julia v1.7 and later, we ship Julia with [libblastrampoline](https://github.com/staticfloat/libblastrampoline), which can enable picking a BLAS at runtime.
+MKL.jl is a Julia package that allows users to use the Intel MKL library for Julia's underlying BLAS and LAPACK, instead of OpenBLAS, which Julia ships with by default. On Julia v1.7 and later, Julia includes [libblastrampoline](https://github.com/staticfloat/libblastrampoline), which enables picking a BLAS and LAPACK library at runtime. A [JuliaCon 2021 talk](https://www.youtube.com/watch?v=t6hptekOR7s) provides details on this mechanism. 
+
+On Julia 1.6 and earlier, adding this package will rebuild Julia's system image with MKL support built in.
 
 ## To Install:
 
