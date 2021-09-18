@@ -7,7 +7,7 @@ On Julia 1.6 and earlier, adding this package will rebuild Julia's system image 
 
 ## To Install:
 
-On Julia 1.7 and later:
+On Julia 1.7 and later, adding the package will replace the system BLAS and LAPACK with MKL provided ones at runtime. Note that the MKL package has to be loaded in every new Julia process. Upon quitting and restarting, Julia will start with the default OpenBLAS.
 ```julia
 julia> using Pkg; Pkg.add("MKL")
 ```
@@ -47,5 +47,5 @@ julia> BLAS.vendor()
 
 On Julia v1.7 and later, we use ILP64 by default on 64-bit systems, and LP64 on 32-bit systems.
 
-On Julia 1.6 and earlier, when building *MKL.jl*, the 32-bit version of MKL is installed. This is due to frequently encountered compatibility issues with the MKL version linked to *numpy*, that by default is shipped with the 32-bit version of MKL. To use the 64-bit version of MKL set the environment variable `ENV["USE_BLAS64"] = true` before building *MKL.jl*. 
+On Julia 1.6 and earlier, when building *MKL.jl*, the 32-bit version of MKL is installed. This is due to frequently encountered compatibility issues with the MKL version linked to *numpy*, which by default is shipped with the 32-bit version of MKL. To use the 64-bit version of MKL, set the environment variable `ENV["USE_BLAS64"] = true` before building *MKL.jl*. 
 
