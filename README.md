@@ -5,9 +5,9 @@ MKL.jl is a Julia package that allows users to use the Intel MKL library for Jul
 
 On Julia 1.6 and earlier, adding this package will rebuild Julia's system image with MKL support built in.
 
-**for users in mainland China**: if you find you have trouble downloading/installing/precompiling this package on 1.6 or earlier, it may because the internet policy blocks github raw content. We strongly suggest you to upgrade your Julia to 1.7 or later versions to fix this problem. (see also [#93](https://github.com/JuliaLinearAlgebra/MKL.jl/issues/93))
+**for users cannot access github raw content**: if you find you have trouble downloading/installing/precompiling this package on 1.6 or earlier, it may because the internet policy blocks github raw content. We strongly suggest you to upgrade your Julia to 1.7 or later versions to fix this problem. (see also [#93](https://github.com/JuliaLinearAlgebra/MKL.jl/issues/93))
 
-**中国大陆用户**: 如果您发现无法在1.6及更早的版本的Julia中安装这个包，有可能是因为一部分编译脚本被墙了，我们强烈建议您升级到Julia 1.7或者之后的版本以修复这个问题。(参见 [#93](https://github.com/JuliaLinearAlgebra/MKL.jl/issues/93))
+**无法下载GitHub文件的用户**: 如果您发现无法在1.6及更早的版本的Julia中安装这个包，有可能是因为一部分编译脚本被墙了，我们强烈建议您升级到Julia 1.7或者之后的版本以修复这个问题。(参见 [#93](https://github.com/JuliaLinearAlgebra/MKL.jl/issues/93))
 
 ## To Install:
 
