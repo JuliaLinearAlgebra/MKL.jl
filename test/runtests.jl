@@ -3,13 +3,17 @@ import LinearAlgebra
 
 @show LinearAlgebra.BLAS.get_config()
 
-if VERSION > MKL.JULIA_VER_NEEDED
-    @test LinearAlgebra.BLAS.get_config().loaded_libs[1].libname == libmkl_rt
-else
-    @test LinearAlgebra.BLAS.vendor() == :mkl
+@testset "blas config" begin
+    if VERSION > MKL.JULIA_VER_NEEDED
+        @test LinearAlgebra.BLAS.get_config().loaded_libs[1].libname == libmkl_rt
+    else
+        @test LinearAlgebra.BLAS.vendor() == :mkl
+    end
 end
 
-@test LinearAlgebra.peakflops() > 0
+@testset "peakflops" begin
+    @test LinearAlgebra.peakflops() > 0
+end
 
 # Test #98 - issues with multi-threaded MKL on mac
 # Test https://github.com/JuliaLang/julia/issues/40787
