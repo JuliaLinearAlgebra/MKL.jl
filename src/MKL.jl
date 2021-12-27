@@ -25,7 +25,7 @@ end
     INTERFACE_GNU
 end
 
-function set_threading_layer(layer::Threading = THREADING_INTEL)
+function set_threading_layer(layer::Threading = THREADING_GNU)
     err = ccall((:MKL_Set_Threading_Layer, libmkl_rt), Cint, (Cint,), layer)
     err == -1 && throw(ErrorException("return value was -1"))
     return nothing
