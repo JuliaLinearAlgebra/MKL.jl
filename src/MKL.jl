@@ -39,8 +39,12 @@ end
 
 function __init__()
     if MKL_jll.is_available()
-        set_threading_layer()
         set_interface_layer()
+        if Sys.isapple()
+            set_threading_layer(THREADING_SEQUENTIAL)
+        else
+            set_threading_layer(THREADING_INTEL)
+        end
         VERSION > JULIA_VER_NEEDED && BLAS.lbt_forward(libmkl_rt, clear=true)
     end
 end
