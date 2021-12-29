@@ -9,6 +9,10 @@ On Julia 1.6 and earlier, adding this package will rebuild Julia's system image 
 
 **无法下载GitHub文件的用户**: 如果您发现无法在1.6及更早的版本的Julia中安装这个包，有可能是因为一部分编译脚本被墙了，我们强烈建议您升级到Julia 1.7或者之后的版本以修复这个问题。(参见 [#93](https://github.com/JuliaLinearAlgebra/MKL.jl/issues/93))
 
+## Usage
+
+If you want to use `MKL.jl` in your project, make sure it is the first package you load before any other package. It is essential that MKL be loaded before other packages so that it can find the Intel OMP library and avoid [issues resulting out of GNU OMP being loaded first](https://github.com/JuliaPackaging/BinaryBuilder.jl/issues/700).
+
 ## To Install:
 
 On Julia 1.7 and later, adding the package will replace the system BLAS and LAPACK with MKL provided ones at runtime. Note that the MKL package has to be loaded in every new Julia process. Upon quitting and restarting, Julia will start with the default OpenBLAS.
