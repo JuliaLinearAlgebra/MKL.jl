@@ -1,4 +1,4 @@
-using SpecialFunctions, MKL, MKL_jll, Test
+using MKL_jll, MKL, Test, SpecialFunctions
 import LinearAlgebra
 
 @show LinearAlgebra.BLAS.get_config()
