@@ -1,6 +1,6 @@
 name = "MKL"
 uuid = "33e6dc65-8f57-5167-99aa-e5a354878fb2"
-version = "0.4.3"
+version = "0.4.4"
 
 [deps]
 Artifacts = "56f22d72-fd6d-98f1-02f0-08ddc0907c33"
@@ -11,7 +11,7 @@ PackageCompiler = "9b87118b-4619-50d2-8e1e-99f35a4d4d9d"
 
 [compat]
 MKL_jll = "2021, 2022"
-PackageCompiler = "1"
+PackageCompiler = "1, 2"
 julia = "1.6"
 
 [extras]
