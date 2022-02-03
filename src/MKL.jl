@@ -51,6 +51,4 @@ function mklnorm(x::Vector{Float64})
           length(x), x, 1)
 end
 
-VERSION > JULIA_VER_NEEDED && include("install.jl")
-
 end # module
