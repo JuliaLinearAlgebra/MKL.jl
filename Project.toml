@@ -1,18 +1,16 @@
 name = "MKL"
 uuid = "33e6dc65-8f57-5167-99aa-e5a354878fb2"
-version = "0.4.4"
+version = "0.5.0"
 
 [deps]
 Artifacts = "56f22d72-fd6d-98f1-02f0-08ddc0907c33"
 Libdl = "8f399da3-3557-5675-b5ff-fb832c97cbdb"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 MKL_jll = "856f044c-d86e-5d09-b602-aeab76dc8ba7"
-PackageCompiler = "9b87118b-4619-50d2-8e1e-99f35a4d4d9d"
 
 [compat]
 MKL_jll = "2021, 2022"
-PackageCompiler = "1, 2"
-julia = "1.6"
+julia = "1.7"
 
 [extras]
 SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
