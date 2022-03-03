@@ -41,7 +41,8 @@ function __init__()
         if Sys.isapple()
             set_threading_layer(THREADING_SEQUENTIAL)
         else
-            set_threading_layer(THREADING_INTEL)
+            # Temporarily make everything sequential to see if tests pass
+            set_threading_layer(THREADING_SEQUENTIAL)
         end
         # MKL 2022 and onwards have 64_ for ILP64 suffixes. The LP64 interface
         # includes LP64 APIs for the non-suffixed symbols and ILP64 API for the
