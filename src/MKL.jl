@@ -24,7 +24,7 @@ end
     INTERFACE_GNU
 end
 
-function set_threading_layer(layer::Threading = THREADING_INTEL)
+function set_threading_layer(layer::Threading = THREADING_SEQUENTIAL)
     err = ccall((:MKL_Set_Threading_Layer, libmkl_rt), Cint, (Cint,), layer)
     err == -1 && throw(ErrorException("return value was -1"))
     return nothing
@@ -38,8 +38,12 @@ end
 
 function __init__()
     if MKL_jll.is_available()
-        set_threading_layer()
         set_interface_layer()
+        if Sys.isapple()
+            set_threading_layer(THREADING_SEQUENTIAL)
+        else
+            set_threading_layer(THREADING_INTEL)
+        end
         BLAS.lbt_forward(libmkl_rt, clear=true)
     end
 end
