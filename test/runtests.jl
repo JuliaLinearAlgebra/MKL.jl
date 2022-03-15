@@ -42,5 +42,22 @@ end
     end
 end
 
-# Run all the LinearAlgebra stdlib tests
-include(joinpath(Sys.STDLIB, "LinearAlgebra", "test", "runtests.jl"))
+# Run all the LinearAlgebra stdlib tests, but with MKL.  We still
+# use `Base.runtests()` to get multithreaded, distributed execution
+# to cut down on CI times, and also to restart workers that trip over
+# the testing RSS limit.  In order for distributed workers to use MKL,
+# we'll modify the test source code so that it imports MKL:
+mktempdir() do dir
+    cp(joinpath(Sys.BINDIR, Base.DATAROOTDIR, "julia", "test"), dir; force=true)
+
+    # Prepend `using MKL` to `testdefs.jl`, so that all test workers load MKL
+    testdefs_path = joinpath(dir, "testdefs.jl")
+    chmod(testdefs_path, 0o644)
+    testdefs_content = String(read(testdefs_path))
+    open(testdefs_path, write=true) do io
+        println(io, "using MKL")
+        println(io, testdefs_content)
+    end
+
+    run(`$(Base.julia_cmd()) --project=$(Base.active_project()) $(dir)/runtests.jl LinearAlgebra`)
+end
