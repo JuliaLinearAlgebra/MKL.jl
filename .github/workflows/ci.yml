@@ -16,7 +16,7 @@ jobs:
       matrix:
         julia-version:
           - 'nightly'
-          - '1.8-nightly'
+          - '1'
         os:
           - ubuntu-latest
           - macos-latest
