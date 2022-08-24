@@ -15,7 +15,8 @@ jobs:
       fail-fast: false
       matrix:
         julia-version:
-          - "1.7"
+          - 'nightly'
+          - '1'
         os:
           - ubuntu-latest
           - macos-latest

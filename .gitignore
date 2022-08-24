@@ -2,3 +2,5 @@ Manifest.toml
 **/*.log
 deps/deps.jl
 deps/usr
+
+/.vscode
