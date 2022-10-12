@@ -35,7 +35,6 @@ Libraries:
 └ [ILP64] libmkl_rt.1.dylib
 ```
 
-
 ## Using the 64-bit vs 32-bit version of MKL
 
 We use ILP64 by default on 64-bit systems, and LP64 on 32-bit systems.
