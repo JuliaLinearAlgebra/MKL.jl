@@ -15,6 +15,7 @@ jobs:
         with:
           persist-credentials: true
           fetch-depth: 0
+          ssh-key: '${{ secrets.FUTURETAGBOT_PRIVATE_KEY }}'
       - uses: julia-actions/setup-julia@b315a4d9881690c63d53fc0175b150a3776140bd
         with:
           version: '1'
