@@ -1,0 +1,35 @@
+name: FutureTagBot
+on:
+  issue_comment:
+    types:
+      - created
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  TagBot:
+    if: github.event_name == 'workflow_dispatch' || github.actor == 'JuliaTagBot'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
+        with:
+          persist-credentials: true
+      - uses: julia-actions/setup-julia@b315a4d9881690c63d53fc0175b150a3776140bd
+        with:
+          version: '1'
+      - name: "Install FutureTagBot"
+        run: |
+          import Pkg
+          name = "FutureTagBot"
+          uuid = "aad37465-2b3a-4ede-b4ea-f5792ced75b4"
+          url = "https://github.com/JuliaRegistries/FutureTagBot.jl.git"
+          # version = "1"
+          Pkg.add(; name, uuid, url)
+        shell: julia --color=yes {0}
+      - name: "Run FutureTagBot"
+        run: |
+          import FutureTagBot
+          FutureTagBot.main(; path = pwd())
+        shell: julia --color=yes {0}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
