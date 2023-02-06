@@ -7,13 +7,14 @@ on:
 permissions:
   contents: write
 jobs:
-  TagBot:
+  FutureTagBot:
     if: github.event_name == 'workflow_dispatch' || github.actor == 'JuliaTagBot'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
         with:
           persist-credentials: true
+          fetch-depth: 0
       - uses: julia-actions/setup-julia@b315a4d9881690c63d53fc0175b150a3776140bd
         with:
           version: '1'
