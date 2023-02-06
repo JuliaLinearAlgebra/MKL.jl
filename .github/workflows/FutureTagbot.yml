@@ -30,7 +30,8 @@ jobs:
           uuid = "aad37465-2b3a-4ede-b4ea-f5792ced75b4"
           url = "https://github.com/JuliaRegistries/FutureTagBot.jl.git"
           # version = "1"
-          Pkg.add(; name, uuid, url)
+          rev = "DilumAluthge-patch-1"
+          Pkg.add(; name, uuid, url, rev)
         shell: julia --color=yes {0}
       - name: "Run FutureTagBot"
         run: |
