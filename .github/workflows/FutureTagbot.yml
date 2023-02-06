@@ -19,7 +19,7 @@ jobs:
         with:
           version: '1'
       - run: git config user.name "FutureTagBot Julia"
-      - run: git config user.email "noreply@example.com"
+      - run: git config user.email "<>"
       - name: "Install FutureTagBot"
         run: |
           import Pkg
