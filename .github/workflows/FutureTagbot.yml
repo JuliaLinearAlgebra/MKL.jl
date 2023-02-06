@@ -4,6 +4,8 @@ on:
     types:
       - created
   workflow_dispatch:
+env:
+  JULIA_PKG_SERVER_REGISTRY_PREFERENCE: 'eager'
 permissions: write-all
 jobs:
   FutureTagBot:
