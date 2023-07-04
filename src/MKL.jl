@@ -4,14 +4,10 @@ using Preferences
 using Libdl
 using LinearAlgebra
 
-# Choose an MKL provider/path; taking an explicit preference as the first choice,
-# but if nothing is set as a preference, fall back to an environment variable,
-# and if that is not given, fall back to the default choice of `MKL_jll`.
-# Note: The environment variable is only read at (.ji) compile time and
-# not(!) every time before loading the package.
+# Choose an MKL path; taking an explicit preference as the first choice,
+# but if nothing is set as a preference, fall back to the default choice of `MKL_jll`.
 const mkl_path = lowercase(something(
     @load_preference("mkl_path", nothing),
-    get(ENV, "JULIA_MKL_PATH", nothing),
     "mkl_jll",
 )::String)
 
@@ -38,7 +34,7 @@ function set_mkl_path(path)
         isfile(path) || error("The provided argument $path doesn't seem to be a valid path to libmkl_rt.")
     end
     @set_preferences!("mkl_path" => path)
-    @info("New MKL provider/path set; please restart Julia to see this take effect", path)
+    @info("New MKL preference set; please restart Julia to see this take effect", path)
 end
 
 using LinearAlgebra
