@@ -3,46 +3,41 @@ module MKL
 using Preferences
 using Libdl
 
-# Choose an MKL provider; taking an explicit preference as the first choice,
+# Choose an MKL provider/path; taking an explicit preference as the first choice,
 # but if nothing is set as a preference, fall back to an environment variable,
 # and if that is not given, fall back to the default choice of `MKL_jll`.
-const mkl_provider = lowercase(something(
-    @load_preference("mkl_provider", nothing),
-    get(ENV, "JULIA_MKL_PROVIDER", nothing),
+# Note: The environment variable is only read at (.ji) compile time and
+# not(!) every time before loading the package.
+const mkl_path = lowercase(something(
+    @load_preference("mkl_path", nothing),
+    get(ENV, "JULIA_MKL_PATH", nothing),
     "mkl_jll",
 )::String)
 
-if mkl_provider == "mkl_jll"
+if lowercase(mkl_path) == "mkl_jll"
     # Only load MKL_jll if we are suppoed to use it as the MKL source
     # to avoid an unnecessary download of the (lazy) artifact.
     import MKL_jll
     const libmkl_rt = MKL_jll.libmkl_rt
-    const mkl_path = dirname(libmkl_rt)
-elseif mkl_provider == "system"
-    # We want to use a "system" MKL, so let's try to find it.
-    # The user may provide the path to libmkl_rt via a preference
-    # or an environment variable. Otherwise, we expect it to
-    # already be loaded, or be on our linker search path.
-    const mkl_path = lowercase(something(
-        @load_preference("mkl_path", nothing),
-        get(ENV, "JULIA_MKL_PATH", nothing),
-        "",
-    )::String)
+elseif lowercase(mkl_path) == "system"
+    # We expect the "system" MKL to already be loaded,
+    # or be on our linker search path.
     libname = string("libmkl_rt", ".", Libdl.dlext)
-    const libmkl_rt = find_library(libname, [mkl_path])
-    libmkl_rt == "" && error("Couldn't find $libname. Maybe try setting JULIA_MKL_PATH?")
+    const libmkl_rt = find_library(libname, [""])
+    libmkl_rt == "" && error("Couldn't find $libname. Try to set JULIA_MKL_PATH explicitly.")
 else
-    error("Invalid mkl_provider choice $(mkl_provider).")
+    # mkl_path should be a valid path to libmkl_rt.
+    const libmkl_rt = mkl_path
+    isfile(libmkl_rt) || error("Couldn't find MKL library at location $libmkl_rt. JULIA_MKL_PATH needs to point directly to libmkl_rt.")
 end
 
-# Changing the MKL provider preference
-function set_mkl_provider(provider)
-    if lowercase(provider) ∉ ("mkl_jll", "system")
-        error("Invalid mkl_provider choice $(provider)")
+# Changing the MKL provider/path preference
+function set_mkl_path(path)
+    if lowercase(path) ∉ ("mkl_jll", "system")
+        isfile(path) || error("The provided argument $path doesn't seem to be a valid path to libmkl_rt.")
     end
-    @set_preferences!("mkl_provider" => lowercase(provider))
-
-    @info("New MKL provider set; please restart Julia to see this take effect", provider)
+    @set_preferences!("mkl_path" => path)
+    @info("New MKL provider/path set; please restart Julia to see this take effect", path)
 end
 
 using LinearAlgebra
