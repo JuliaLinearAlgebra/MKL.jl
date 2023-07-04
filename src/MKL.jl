@@ -2,6 +2,7 @@ module MKL
 
 using Preferences
 using Libdl
+using LinearAlgebra
 
 # Choose an MKL provider/path; taking an explicit preference as the first choice,
 # but if nothing is set as a preference, fall back to an environment variable,
