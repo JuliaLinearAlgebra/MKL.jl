@@ -49,4 +49,4 @@ If you already have an Intel MKL installation available (as on most HPC clusters
 * `system`: The package will try to automatically locate the libmkl_rt library (i.e. find it on the linker search path).
 * `path/to/my/libmkl_rt.<EXT>`: Explicit path to the `libmkl_rt.<EXT>` where `<EXT>` is the shared library extension of the system at hand (e.g. `.so`, `.dll`, `.dylib`)
 
-Note that, in contrast to the preference, the environment variable only has an effect when MKL.jl is (re-)precompiled. To force a change of the MKL path after the compilation has happened, use the function `MKL.set_mkl_path`, which takes the options listed above as input.
+Note that, in contrast to the preference, the environment variable only has an effect when MKL.jl is (re-)precompiled. To force a change of the MKL path after the compilation has happened, use the function `MKL.set_mkl_path`, which takes the options listed above as input.  The usecase for the environment variable convenience is for automated installs such as CI systems, where the initial default choice should be set with no human interaction whatsoever.
