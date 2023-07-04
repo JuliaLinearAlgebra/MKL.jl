@@ -6,10 +6,10 @@ using LinearAlgebra
 
 # Choose an MKL path; taking an explicit preference as the first choice,
 # but if nothing is set as a preference, fall back to the default choice of `MKL_jll`.
-const mkl_path = lowercase(something(
+const mkl_path = something(
     @load_preference("mkl_path", nothing),
     "mkl_jll",
-)::String)
+)::String
 
 if lowercase(mkl_path) == "mkl_jll"
     # Only load MKL_jll if we are suppoed to use it as the MKL source
@@ -21,11 +21,11 @@ elseif lowercase(mkl_path) == "system"
     # or be on our linker search path.
     libname = string("libmkl_rt", ".", Libdl.dlext)
     const libmkl_rt = find_library(libname, [""])
-    libmkl_rt == "" && error("Couldn't find $libname. Try to set JULIA_MKL_PATH explicitly.")
+    libmkl_rt == "" && error("Couldn't find $libname. Try to specify the path to `libmkl_rt` explicitly.")
 else
     # mkl_path should be a valid path to libmkl_rt.
     const libmkl_rt = mkl_path
-    isfile(libmkl_rt) || error("Couldn't find MKL library at location $libmkl_rt. JULIA_MKL_PATH needs to point directly to libmkl_rt.")
+    isfile(libmkl_rt) || error("Couldn't find MKL library at $libmkl_rt.")
 end
 
 # Changing the MKL provider/path preference
@@ -72,7 +72,7 @@ function set_interface_layer(interface::Interface = INTERFACE_LP64)
 end
 
 function __init__()
-    if MKL_jll.is_available()
+    if !(mkl_path == "mkl_jll" && !MKL_jll.is_available())
         if Sys.isapple()
             set_threading_layer(THREADING_SEQUENTIAL)
         end
