@@ -31,17 +31,6 @@ else
     mkl_found || @warn("Couldn't find MKL library at $libmkl_rt.")
 end
 
-# Changing the MKL provider/path preference
-function set_mkl_path(path)
-    if lowercase(path) ∉ ("mkl_jll", "system") && !isfile(path)
-        error("The provided argument $path neither seems to be a valid path to libmkl_rt nor \"mkl_jll\" or \"system\".")
-    end
-    @set_preferences!("mkl_path" => path)
-    @info("New MKL preference set; please restart Julia to see this take effect", path)
-end
-
-using LinearAlgebra
-
 if Base.USE_BLAS64
     const MKLBlasInt = Int64
 else
@@ -62,6 +51,14 @@ end
     INTERFACE_GNU
 end
 
+function set_mkl_path(path)
+    if lowercase(path) ∉ ("mkl_jll", "system") && !isfile(path)
+        error("The provided argument $path neither seems to be a valid path to libmkl_rt nor \"mkl_jll\" or \"system\".")
+    end
+    @set_preferences!("mkl_path" => path)
+    @info("New MKL preference set; please restart Julia to see this take effect", path)
+end
+
 function set_threading_layer(layer::Threading = THREADING_SEQUENTIAL)
     err = ccall((:MKL_Set_Threading_Layer, libmkl_rt), Cint, (Cint,), layer)
     err == -1 && throw(ErrorException("MKL_Set_Threading_Layer() returned -1"))
@@ -72,6 +69,11 @@ function set_interface_layer(interface::Interface = INTERFACE_LP64)
     err = ccall((:MKL_Set_Interface_Layer, libmkl_rt), Cint, (Cint,), interface)
     err == -1 && throw(ErrorException("MKL_Set_Interface_Layer() returned -1"))
     return nothing
+end
+
+function mklnorm(x::Vector{Float64})
+    ccall((:dnrm2_, libmkl_rt), Float64,
+          (Ref{MKLBlasInt}, Ptr{Float64}, Ref{MKLBlasInt}), length(x), x, 1)
 end
 
 function lbt_mkl_forwarding()
@@ -99,11 +101,6 @@ function __init__()
     else
         @warn("MKL library couldn't be found. Please make sure to set the `mkl_path` preference correctly (e.g. via `MKL.set_mkl_path`).")
     end
-end
-
-function mklnorm(x::Vector{Float64})
-    ccall((:dnrm2_, libmkl_rt), Float64,
-          (Ref{MKLBlasInt}, Ptr{Float64}, Ref{MKLBlasInt}), length(x), x, 1)
 end
 
 end # module
