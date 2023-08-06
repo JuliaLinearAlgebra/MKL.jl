@@ -29,13 +29,13 @@ jobs:
             julia-arch: x86
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
       - uses: julia-actions/setup-julia@v1
         with:
           version: ${{ matrix.julia-version }}
           arch: ${{ matrix.julia-arch }}
       - name: Cache artifacts
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         env:
           cache-name: cache-artifacts
         with:
