@@ -53,3 +53,6 @@ jobs:
           Pkg.develop(PackageSpec(path=pwd()))
           Pkg.build("MKL"; verbose=true)
       - uses: julia-actions/julia-runtest@latest
+        env:
+          # Loading MKL during the tests can create an environment variable for OpenMP that is visible after the tests (#130)
+          JULIA_TEST_CHECK_MUTATED_ENV: "false"
