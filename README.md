@@ -6,6 +6,12 @@ MKL.jl is a Julia package that allows users to use the Intel MKL library for Jul
 
 This package requires Julia 1.7+
 
+## Warning: `using MKL` can be breaking for uses of Base.LinearAlgebra
+
+MKL.jl is an incomplete BLAS wrapper which does not implement all of the functions of the [libblastrampoline](https://github.com/staticfloat/libblastrampoline) interface. Because of this,
+`using MKL` is technically breaking and will cause some LinearAlgebra.jl functionality to fail unexpectedly. For more details, see https://github.com/JuliaLinearAlgebra/MKL.jl/issues/138
+which is tracking this issue.
+
 ## Usage
 
 If you want to use `MKL.jl` in your project, make sure it is the first package you load before any other package. It is essential that MKL be loaded before other packages so that it can find the Intel OMP library and avoid [issues resulting out of GNU OMP being loaded first](https://github.com/JuliaPackaging/BinaryBuilder.jl/issues/700).
