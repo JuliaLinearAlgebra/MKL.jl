@@ -7,10 +7,12 @@ Artifacts = "56f22d72-fd6d-98f1-02f0-08ddc0907c33"
 Libdl = "8f399da3-3557-5675-b5ff-fb832c97cbdb"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 MKL_jll = "856f044c-d86e-5d09-b602-aeab76dc8ba7"
+Preferences = "21216c6a-2e73-6563-6e65-726566657250"
 
 [compat]
 MKL_jll = "2022, 2023.2"
 julia = "1.8"
+Preferences = "1.4"
 
 [extras]
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
