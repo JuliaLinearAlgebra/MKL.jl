@@ -1,4 +1,4 @@
-import LinearAlgebra
+import LinearAlgebra, Pkg
 
 # Set up a debugging fallback function that prints out a stacktrace if the LinearAlgebra
 # tests end up calling a function that we don't have forwarded.
