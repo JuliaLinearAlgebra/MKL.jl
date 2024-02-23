@@ -9,26 +9,41 @@ on:
 
 jobs:
   test:
-    name: Julia ${{ matrix.julia-version }} - ${{ matrix.os }} - ${{ matrix.julia-arch }}
+    name: Julia ${{ matrix.version }} - ${{ matrix.os }} - ${{ matrix.arch }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        julia-version:
-          - 'nightly'
+        version:
           - '1'
         os:
           - ubuntu-latest
           - windows-latest
-        julia-arch:
+          - macOS-13 # intel
+          - macOS-14 # arm
+        arch:
           - x64
           - x86
+          - aarch64
+        exclude:
+          - os: ubuntu-latest
+            arch: aarch64
+          - os: windows-latest
+            arch: aarch64
+          - os: macOS-13
+            arch: x86
+          - os: macOS-13
+            arch: aarch64
+          - os: macOS-14
+            arch: x86
+          - os: macOS-14
+            arch: x64
     steps:
       - uses: actions/checkout@v4
       - uses: julia-actions/setup-julia@v1
         with:
-          version: ${{ matrix.julia-version }}
-          arch: ${{ matrix.julia-arch }}
+          version: ${{ matrix.version }}
+          arch: ${{ matrix.arch }}
       - name: Cache artifacts
         uses: actions/cache@v4
         env:
