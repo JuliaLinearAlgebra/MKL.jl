@@ -4,7 +4,7 @@
 
 MKL.jl is a Julia package that allows users to use the Intel MKL library for Julia's underlying BLAS and LAPACK, instead of OpenBLAS, which Julia ships with by default. Julia includes [libblastrampoline](https://github.com/staticfloat/libblastrampoline), which enables picking a BLAS and LAPACK library at runtime. A [JuliaCon 2021 talk](https://www.youtube.com/watch?v=t6hptekOR7s) provides details on this mechanism. 
 
-This package requires Julia 1.7+
+This package requires Julia 1.8+, and only covers the forwarding of BLAS and LAPACK routines in Julia to MKL. Other packages like [Pardiso.jl](https://github.com/JuliaSparse/Pardiso.jl) wrap more of MKL's functionality.
 
 ## Usage
 
