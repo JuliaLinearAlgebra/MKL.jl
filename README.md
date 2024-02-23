@@ -39,6 +39,14 @@ Libraries:
 
 We use ILP64 by default on 64-bit systems, and LP64 on 32-bit systems.
 
+## NOTE: Using MKL with Distributed
+
+If you are using `Distributed` for parallelism on a single node, set MKL to single threaded mode to [avoid over subcribing](https://github.com/JuliaLinearAlgebra/MKL.jl/issues/122) the CPUs. 
+
+```julia
+BLAS.set_num_threads(1)
+```
+
 ## NOTE: MKL on Intel Macs
 MKL for Intel Macs is discontinued as of MKL 2024. Thus, in order to use MKL on Intel Macs, you will need to install the right version of `MKL_jll` and possibly also pin it.
 
