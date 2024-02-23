@@ -39,7 +39,25 @@ Libraries:
 
 We use ILP64 by default on 64-bit systems, and LP64 on 32-bit systems.
 
-## NOTE: Potential multi-threading issues on Intel Macs
+## NOTE: MKL on Intel Macs
+MKL for Intel Macs is discontinued as of MKL 2024. Thus, in order to use MKL on Intel Macs, you will need to install the right version of `MKL_jll` and possibly also pin it.
+
+```julia
+julia> Pkg.add(name="MKL_jll", version="2023");
+   Resolving package versions...
+    Updating `~/.julia/environments/v1.10/Project.toml`
+⌃ [856f044c] + MKL_jll v2023.2.0+0
+  No Changes to `~/.julia/environments/v1.10/Manifest.toml`
+
+julia> Pkg.pin(name="MKL_jll", version="2023");
+   Resolving package versions...
+    Updating `~/.julia/environments/v1.10/Project.toml`
+⌃ [856f044c] ~ MKL_jll v2023.2.0+0 ⇒ v2023.2.0+0 ⚲
+    Updating `~/.julia/environments/v1.10/Manifest.toml`
+⌃ [856f044c] ~ MKL_jll v2023.2.0+0 ⇒ v2023.2.0+0 ⚲
+        Info Packages marked with ⌃ have new versions available and may be upgradable.
+```
+
 MKL seems to have [some issues](https://github.com/JuliaLinearAlgebra/MKL.jl/issues/129) on Intel Macs when multi-threading is enabled. Threading can be disabled in such cases with:
 
 ```julia
