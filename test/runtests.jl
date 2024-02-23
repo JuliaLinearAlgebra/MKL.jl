@@ -11,6 +11,11 @@ LinearAlgebra.BLAS.lbt_set_default_func(@cfunction(debug_missing_function, Cvoid
 using MKL_jll, MKL, Test, SpecialFunctions
 @show LinearAlgebra.BLAS.get_config()
 
+if !MKL_jll.is_available()
+    @warn "MKL_jll is not available/installed. Exiting."
+    exit()
+end
+
 @testset "Sanity Tests" begin
     @test LinearAlgebra.BLAS.get_config().loaded_libs[1].libname == libmkl_rt
     @test LinearAlgebra.peakflops() > 0
