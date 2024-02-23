@@ -64,5 +64,5 @@ mktempdir() do dir
         println(io, testdefs_content)
     end
 
-    run(`$(Base.julia_cmd()) --project=$(Base.active_project()) $(dir)/runtests.jl LinearAlgebra`)
+    run(`$(Base.julia_cmd()) --project=$(Base.active_project()) $(dir)/runtests.jl LinearAlgebra/blas LinearAlgebra/lapack`)
 end
