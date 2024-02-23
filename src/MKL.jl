@@ -36,7 +36,7 @@ end
 
 function lbt_forward_to_mkl()
     if !MKL_jll.is_available()
-        isinteractive() && @warn "MKL_jll is not available/installed."
+        isinteractive() && @warn "MKL is not available/installed."
         return
     end
 
