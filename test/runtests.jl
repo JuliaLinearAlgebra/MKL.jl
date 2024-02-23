@@ -8,8 +8,12 @@ function debug_missing_function()
 end
 LinearAlgebra.BLAS.lbt_set_default_func(@cfunction(debug_missing_function, Cvoid, ()))
 
-using MKL_jll, MKL, Test, SpecialFunctions
+using MKL_jll, MKL, Test, SpecialFunctions, Pkg
 @show LinearAlgebra.BLAS.get_config()
+
+if Sys.isapple() && Sys.ARCH == :x86_64
+    Pkg.add(name="MKL_jll", version="2023");
+end
 
 if !MKL_jll.is_available()
     @warn "MKL_jll is not available/installed. Exiting."
