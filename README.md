@@ -38,3 +38,10 @@ Libraries:
 ## Using the 64-bit vs 32-bit version of MKL
 
 We use ILP64 by default on 64-bit systems, and LP64 on 32-bit systems.
+
+## NOTE: Potential multi-threading issues on Intel Macs
+MKL seems to have [some issues](https://github.com/JuliaLinearAlgebra/MKL.jl/issues/129) on Intel Macs when multi-threading is enabled. Threading can be disabled in such cases with:
+
+```julia
+MKL.set_threading_layer(THREADING_SEQUENTIAL)
+```
