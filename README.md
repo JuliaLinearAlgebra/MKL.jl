@@ -16,6 +16,7 @@ Adding the package will replace the system BLAS and LAPACK with MKL provided one
 ```julia
 julia> using Pkg; Pkg.add("MKL")
 ```
+***Hint:*** On Windows the installation might fail due to a missing library with the name `VCRUNTIME140.dll`. To install it, download and execute https://aka.ms/vs/17/release/vc_redist.x64.exe .
 
 ## To Check Installation:
 
