@@ -24,7 +24,7 @@ function set_threading_layer(layer::Threading = THREADING_SEQUENTIAL)
     return nothing
 end
 
-function set_interface_layer(interface::Interface = INTERFACE_ILP64)
+function set_interface_layer(interface::Interface = INTERFACE_LP64)
     err = ccall((:MKL_Set_Interface_Layer, libmkl_rt), Cint, (Cint,), interface)
     err == -1 && throw(ErrorException("MKL_Set_Interface_Layer() returned -1"))
     return nothing
@@ -43,7 +43,7 @@ function lbt_forward_to_mkl()
     # MKL 2022 and onwards have 64_ for ILP64 suffixes. The LP64 interface
     # includes LP64 APIs for the non-suffixed symbols and ILP64 API for the
     # 64_ suffixed symbols. LBT4 in Julia is necessary for this to work.
-    set_interface_layer(Base.USE_BLAS64 ? INTERFACE_ILP64 : INTERFACE_LP64)
+    set_interface_layer(INTERFACE_LP64)
     if Base.USE_BLAS64
         # Load ILP64 forwards
         BLAS.lbt_forward(libmkl_rt; clear=true, suffix_hint="64")
