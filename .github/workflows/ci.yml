@@ -21,13 +21,13 @@ jobs:
           - windows-latest
         arch:
           - x64
-	  - x86
+          - x86
         include:
-          - os: macOS-14
+          - os: macOS-latest
             arch: aarch64
     steps:
       - uses: actions/checkout@v4
-      - uses: julia-actions/setup-julia@v2
+      - uses: julia-actions/setup-julia@latest
         with:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
