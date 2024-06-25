@@ -10,11 +10,6 @@ LinearAlgebra.BLAS.lbt_set_default_func(@cfunction(debug_missing_function, Cvoid
 
 using Pkg
 
-if Sys.isapple() && Sys.ARCH == :x86_64
-    Pkg.add(name="MKL_jll", version="2023");
-    Pkg.pin(name="MKL_jll", version="2023");
-end
-
 using MKL_jll, MKL, Test, SpecialFunctions, Pkg
 
 if !MKL_jll.is_available()
