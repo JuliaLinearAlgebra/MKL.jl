@@ -19,17 +19,8 @@ jobs:
         os:
           - ubuntu-latest
           - windows-latest
-          - macOS-13
         arch:
           - x64
-          - x86
-        include:
-          - os: macOS-latest
-            arch: aarch64
-            version: '1'
-        exclude:
-          - os: macOS-13
-            arch: x86
     steps:
       - uses: actions/checkout@v4
       - uses: julia-actions/setup-julia@v2
