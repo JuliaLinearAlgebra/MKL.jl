@@ -12,7 +12,7 @@ Logging = "56ddb016-857b-54e1-b83d-db4d58db5568"
 [compat]
 julia = "1.9"
 Artifacts = "1"
-MKL_jll = "2024.1"
+MKL_jll = "2025.0.1"
 
 [extras]
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
