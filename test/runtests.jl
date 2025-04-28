@@ -50,6 +50,13 @@ end
     end
 end
 
+@testset "MKL global threads" begin
+    current_n_threads = MKL.get_num_threads()
+    MKL.set_num_threads(1)
+    @test MKL.get_num_threads() == 1
+    MKL.set_num_threads(current_n_threads)
+end
+
 # Run all the LinearAlgebra stdlib tests, but with MKL.  We still
 # use `Base.runtests()` to get multithreaded, distributed execution
 # to cut down on CI times, and also to restart workers that trip over
