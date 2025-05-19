@@ -40,12 +40,16 @@ Libraries:
 
 We use ILP64 by default on 64-bit systems, and LP64 on 32-bit systems.
 
+## Threading control
+
+To set or get the global number of threads used by `MKL`, use `MKL.{set/get}_num_threads`. This does not affect specific domains where the number of threads is set with [`mkl_domain_set_num_threads`](https://www.intel.com/content/www/us/en/docs/onemkl/developer-reference-c/2025-0/mkl-domain-set-num-threads.html). Calling `LinearAlgebra.BLAS.{set/get}_num_threads` is domain-specific and only refers to the `BLAS` domain (unlike other backends, where the number of threads used by `LAPACK` is also modified).
+
 ## NOTE: Using MKL with Distributed
 
 If you are using `Distributed` for parallelism on a single node, set MKL to single threaded mode to [avoid over subcribing](https://github.com/JuliaLinearAlgebra/MKL.jl/issues/122) the CPUs. 
 
 ```julia
-BLAS.set_num_threads(1)
+MKL.set_num_threads(1)
 ```
 
 ## NOTE: MKL on Intel Macs

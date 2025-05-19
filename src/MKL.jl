@@ -59,4 +59,11 @@ function mklnorm(x::Vector{Float64})
           (Ref{LinearAlgebra.BlasInt}, Ptr{Float64}, Ref{LinearAlgebra.BlasInt}), length(x), x, 1)
 end
 
+function set_num_threads(n::LinearAlgebra.BlasInt)
+    ccall((:mkl_set_num_threads, libmkl_rt), Cvoid, (Ref{LinearAlgebra.BlasInt},), n)
+end
+
+function get_num_threads()::LinearAlgebra.BlasInt
+    ccall((:mkl_get_max_threads, libmkl_rt), LinearAlgebra.BlasInt, ())
+end
 end # module
