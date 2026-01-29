@@ -17,6 +17,7 @@ jobs:
         version:
           - '1'
           - 'lts'
+          - 'nightly'
         os:
           - ubuntu-latest
           - windows-latest
