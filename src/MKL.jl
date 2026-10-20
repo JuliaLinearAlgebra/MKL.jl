@@ -36,7 +36,12 @@ end
 
 function lbt_forward_to_mkl()
     if !MKL_jll.is_available()
-        isinteractive() && @warn "MKL is not available/installed."
+        do_warn = tryparse(Bool, strip(get(ENV, "JULIA_MKL_WARN_UNAVAILABLE", "true")))
+        if isinteractive() && do_warn == true
+            @warn "MKL is not available/installed."
+        else
+            @debug "MKL is not available/installed."
+        end
         return
     end
 
